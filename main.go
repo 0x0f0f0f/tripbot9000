@@ -95,7 +95,7 @@ func main() {
 	center := vg.Point{X: img_w / 2, Y: img_h / 2}
 
 	outer_radius := img_w / 2
-	radius_step := 5 * vg.Centimeter
+	radius_step := 3 * vg.Centimeter
 
 	rand.Seed(*seed)
 	// bg_rect := vg.Rectangle{Min: vg.Point{0, 0}, Max: vg.Point{img_w, img_h}}

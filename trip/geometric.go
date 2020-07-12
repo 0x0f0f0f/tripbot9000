@@ -1,6 +1,7 @@
 package trip
 
 import (
+	// "fmt"
 	"gonum.org/v1/plot/vg"
 	"image/color"
 	"math"
@@ -49,6 +50,48 @@ func RegularPolygon(center vg.Point, radius vg.Length, ns int, centerlines bool)
 		outer = new_outer
 	}
 
+	return path
+}
+
+func SierpinskyTriangle(center vg.Point, radius vg.Length, maxdepth int, path vg.Path, flipY bool) vg.Path {
+	yScale := vg.Length(1)
+	if flipY {
+		yScale = vg.Length(-1)
+	}
+
+	top := vg.Point{center.X, yScale*center.Y + radius}
+
+	botleft := vg.Point{
+		X: center.X + radius*vg.Length(math.Cos(2*math.Pi/3+math.Pi/2)),
+		Y: yScale*center.Y + radius*vg.Length(math.Sin(2*math.Pi/3+math.Pi/2)),
+	}
+	botright := vg.Point{
+		X: center.X + radius*vg.Length(math.Cos(math.Pi/3.0-(math.Pi/2))),
+		Y: yScale*center.Y + radius*vg.Length(math.Sin(math.Pi/3.0-(math.Pi/2))),
+	}
+
+	// fmt.Printf("%+v\n%+v\n%+v\n", top, botleft, botright)
+
+	// Calculate subtriangle radius and center
+	base := botright.X - botleft.X
+	// height := top.Y - botright.Y
+	// Draw the outer triangle
+	path.Move(top)
+	path.Line(botleft)
+	path.Line(botright)
+	path.Line(top)
+	path.Move(center)
+
+	if maxdepth > 0 {
+		subradius := radius / 2
+		top_center := vg.Point{center.X, center.Y + subradius}
+		left_center := vg.Point{center.X - base/4, center.Y - subradius/2}
+		right_center := vg.Point{center.X + base/4, center.Y - subradius/2}
+
+		path = SierpinskyTriangle(top_center, subradius, maxdepth-1, path, flipY)
+		path = SierpinskyTriangle(left_center, subradius, maxdepth-1, path, flipY)
+		path = SierpinskyTriangle(right_center, subradius, maxdepth-1, path, flipY)
+	}
 	return path
 }
 
@@ -145,17 +188,22 @@ func DrawRandomGeom(
 		// Generate the number of segments
 		ns := RandInt(3, 12)
 		// 1/3 Chance of making a polygon
-		if Chance(2) {
-			centerlines := false
-			if Chance(2) {
-				centerlines = true
-			}
-			poly := RegularPolygon(center, r, ns, centerlines)
+		n := RandInt(0, 7)
+		switch {
+		case n == 0:
+			triangle := SierpinskyTriangle(center, r, RandInt(3, 10), vg.Path{}, Chance(2))
+			c.Stroke(triangle)
+		case n < 4:
+			poly := RegularPolygon(center, r, ns, Chance(2))
 			c.Stroke(poly)
-
-		} else {
-			gem := Gemstone(center, r, r-(radius_step), ns)
+		case n >= 4:
+			if Chance(2) {
+				poly := RegularPolygon(center, r, ns, Chance(2))
+				c.Stroke(poly)
+			}
+			gem := Gemstone(center, r, r-(radius_step*2), ns)
 			c.Stroke(gem)
+
 		}
 	}
 	return c
