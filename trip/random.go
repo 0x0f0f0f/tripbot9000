@@ -4,15 +4,15 @@ import (
 	"math/rand"
 )
 
-func randInt(min int, max int) int {
+func RandInt(min int, max int) int {
 	return min + rand.Intn(max-min)
 }
-func randInt16(min int, max int) uint16 {
+func RandInt16(min int, max int) uint16 {
 	return uint16(min + rand.Intn(max-min))
 }
-func randFloat(min float64, max float64) float64 {
+func RandFloat(min float64, max float64) float64 {
 	return min + rand.Float64()*(max-min)
 }
-func chance(n int) bool {
-	return randInt(0, n) == 0
+func Chance(n int) bool {
+	return RandInt(0, n) == 0
 }

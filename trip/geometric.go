@@ -52,15 +52,15 @@ func RegularPolygon(center vg.Point, radius vg.Length, ns int, centerlines bool)
 	return path
 }
 
-// Generate a random gemstone, given the center position, the radius, the minimum distance of gemstone points
+// Generate a Random gemstone, given the center position, the radius, the minimum distance of gemstone points
 // from the radius and the number of segments of the starting circle.
 func Gemstone(center vg.Point, radius vg.Length, minpointradius vg.Length, ns int) vg.Path {
-	// How many randomly chosen points fit in a segment
-	npps := randInt(3, 12)
+	// How many Randomly chosen points fit in a segment
+	npps := RandInt(3, 12)
 	sl := segmentLength(ns)
 
 	// Random points inside a segment
-	randpolar := make([]Polar, npps)
+	Randpolar := make([]Polar, npps)
 	// Connections between points inside a segment
 	connections := make([][]bool, npps)
 	for i := range connections {
@@ -69,22 +69,22 @@ func Gemstone(center vg.Point, radius vg.Length, minpointradius vg.Length, ns in
 	// if a point should connect to itself in the next segment
 	connect_to_next := make([]bool, npps)
 
-	for i := range randpolar {
-		// Generate random polar coordinates for points in the segment
+	for i := range Randpolar {
+		// Generate Random polar coordinates for points in the segment
 		p := Polar{
-			Dist: vg.Length(randFloat(float64(minpointradius), float64(radius))),
-			Rad:  randFloat(0.0, sl),
+			Dist: vg.Length(RandFloat(float64(minpointradius), float64(radius))),
+			Rad:  RandFloat(0.0, sl),
 		}
-		randpolar[i] = p
+		Randpolar[i] = p
 
-		// Points have 1/npps chance of being connected
+		// Points have 1/npps Chance of being connected
 		for j := range connections {
-			if randInt(1, npps) == 1 {
+			if RandInt(1, npps) == 1 {
 				connections[i][j] = true
 			}
 		}
 
-		if randInt(0, npps/2) == 1 {
+		if RandInt(0, npps/2) == 1 {
 			connect_to_next[i] = true
 		}
 
@@ -96,7 +96,7 @@ func Gemstone(center vg.Point, radius vg.Length, minpointradius vg.Length, ns in
 		xyps[i] = make([]vg.Point, npps)
 
 		// Convert to XY
-		for j, p := range randpolar {
+		for j, p := range Randpolar {
 			np := p
 			// If the segment number is even, then invert axis
 			if i%2 == 1 && (ns%2 == 0 && i < ns) {
@@ -133,7 +133,7 @@ func Gemstone(center vg.Point, radius vg.Length, minpointradius vg.Length, ns in
 	return path
 }
 
-// Generate a random concentric geometric pattern and draw it on a canvas
+// Generate a Random concentric geometric pattern and draw it on a canvas
 func DrawRandomGeom(
 	c vg.Canvas,
 	center vg.Point,
@@ -141,13 +141,13 @@ func DrawRandomGeom(
 	radius_step vg.Length,
 	palette []color.Color) vg.Canvas {
 	for r := outer_radius; r > radius_step; r -= radius_step {
-		c.SetColor(palette[randInt(0, len(palette))])
+		c.SetColor(palette[RandInt(0, len(palette))])
 		// Generate the number of segments
-		ns := randInt(3, 12)
-		// 1/3 chance of making a polygon
-		if chance(2) {
+		ns := RandInt(3, 12)
+		// 1/3 Chance of making a polygon
+		if Chance(2) {
 			centerlines := false
-			if chance(2) {
+			if Chance(2) {
 				centerlines = true
 			}
 			poly := RegularPolygon(center, r, ns, centerlines)
