@@ -1,6 +1,7 @@
 # TRIPBOT9000
 
 TRIPBBOT9000 generates abstract geometric art.
+[Get the merchandise](https://tripbot.shop)
 
 ## Installation
 ```
@@ -26,4 +27,6 @@ Usage of tripbot9000:
     	image width (default "80cm")
 ```
 
-[Get the merchandise](https://tripbot.shop)
+# <p align="center"><img alt="gobba" src="example1.png" width = 100% /></p>
+# <p align="center"><img alt="gobba" src="example2.png" width = 100% /></p>
+
