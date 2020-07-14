@@ -102,16 +102,15 @@ func main() {
 	c.SetLineWidth(1 * vg.Millimeter)
 
 	if *combo {
-		radius_step := 1 * vg.Centimeter
 
 		numfigs := t.RandInt(1, 10)
 
 		for i := 0; i < numfigs; i++ {
-			outer_radius := img_w / vg.Length(t.RandFloat(5, 10))
-			or := float64(outer_radius)
+			outer_radius := vg.Length(t.RandFloat(float64(img_w/10), float64(img_w/2)))
+			radius_step := outer_radius / vg.Length(t.RandFloat(4, 10))
 			center := vg.Point{
-				X: vg.Length(t.RandFloat(or-10, float64(img_w)-or+10)),
-				Y: vg.Length(t.RandFloat(or-10, float64(img_h)-or+10)),
+				X: vg.Length(t.RandFloat(0, float64(img_w))),
+				Y: vg.Length(t.RandFloat(0, float64(img_h))),
 			}
 			c = t.DrawRandomGeom(c, center, outer_radius, radius_step, palette.Plan9).(vgimg.PngCanvas)
 
