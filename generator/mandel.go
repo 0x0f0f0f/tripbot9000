@@ -1,14 +1,16 @@
-package trip
+package generator
 
 import (
 	"fmt"
+	"image"
+	"image/color"
+	"time"
+
+	"github.com/0x0f0f0f/tripbot9000/util"
 	"github.com/karlek/vanilj/canvas"
 	"github.com/karlek/vanilj/fractal"
 	"github.com/karlek/vanilj/fractal/mandel"
 	"gonum.org/v1/plot/vg"
-	"image"
-	"image/color"
-	"time"
 	// "math"
 )
 
@@ -77,7 +79,7 @@ func RenderMandelbrot(
 func RandomMandelbrot(filename string, w, h vg.Length, dpi int) *image.RGBA {
 	img_w_px := w.Dots(float64(dpi))
 	img_h_px := h.Dots(float64(dpi))
-	location := locations[RandInt(0, len(locations))]
+	location := locations[util.RandInt(0, len(locations))]
 	return RenderMandelbrot(filename,
 		// 1920, 1080,
 		int(img_w_px), int(img_h_px),
@@ -85,7 +87,7 @@ func RandomMandelbrot(filename string, w, h vg.Length, dpi int) *image.RGBA {
 		location.X, location.Y,
 		1000,
 		// float64(RandInt(500, 1000)),
-		RandFloat(100.0, 10000.0))
+		util.RandFloat(100.0, 10000.0))
 	// float64(RandInt(500, 1000)))
 
 }

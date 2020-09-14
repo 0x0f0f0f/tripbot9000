@@ -1,10 +1,12 @@
-package trip
+package generator
 
 import (
 	// "fmt"
-	"gonum.org/v1/plot/vg"
 	"image/color"
 	"math"
+
+	"github.com/0x0f0f0f/tripbot9000/util"
+	"gonum.org/v1/plot/vg"
 )
 
 // Polar coordinates
@@ -99,7 +101,7 @@ func SierpinskyTriangle(center vg.Point, radius vg.Length, maxdepth int, path vg
 // from the radius and the number of segments of the starting circle.
 func Gemstone(center vg.Point, radius vg.Length, minpointradius vg.Length, ns int) vg.Path {
 	// How many Randomly chosen points fit in a segment
-	npps := RandInt(3, 12)
+	npps := util.RandInt(3, 12)
 	sl := segmentLength(ns)
 
 	// Random points inside a segment
@@ -115,19 +117,19 @@ func Gemstone(center vg.Point, radius vg.Length, minpointradius vg.Length, ns in
 	for i := range Randpolar {
 		// Generate Random polar coordinates for points in the segment
 		p := Polar{
-			Dist: vg.Length(RandFloat(float64(minpointradius), float64(radius))),
-			Rad:  RandFloat(0.0, sl),
+			Dist: vg.Length(util.RandFloat(float64(minpointradius), float64(radius))),
+			Rad:  util.RandFloat(0.0, sl),
 		}
 		Randpolar[i] = p
 
 		// Points have 1/npps Chance of being connected
 		for j := range connections {
-			if RandInt(1, npps) == 1 {
+			if util.RandInt(1, npps) == 1 {
 				connections[i][j] = true
 			}
 		}
 
-		if RandInt(0, npps/2) == 1 {
+		if util.RandInt(0, npps/2) == 1 {
 			connect_to_next[i] = true
 		}
 
@@ -177,28 +179,29 @@ func Gemstone(center vg.Point, radius vg.Length, minpointradius vg.Length, ns in
 }
 
 // Generate a Random concentric geometric pattern and draw it on a canvas
-func DrawRandomGeom(
+func DrawRandomGemstone(
 	c vg.Canvas,
 	center vg.Point,
 	outer_radius,
 	radius_step vg.Length,
 	palette []color.Color) vg.Canvas {
 	for r := outer_radius; r > radius_step; r -= radius_step {
-		c.SetColor(palette[RandInt(0, len(palette))])
+		c.SetColor(color.White)
+		// c.SetColor(palette[RandInt(0, len(palette))])
 		// Generate the number of segments
-		ns := RandInt(3, 12)
+		ns := util.RandInt(3, 12)
 		// 1/3 Chance of making a polygon
-		n := RandInt(0, 7)
+		n := util.RandInt(0, 7)
 		switch {
 		case n == 0:
-			triangle := SierpinskyTriangle(center, r, RandInt(3, 10), vg.Path{}, Chance(2))
+			triangle := SierpinskyTriangle(center, r, util.RandInt(3, 10), vg.Path{}, util.Chance(2))
 			c.Stroke(triangle)
 		case n < 4:
-			poly := RegularPolygon(center, r, ns, Chance(2))
+			poly := RegularPolygon(center, r, ns, util.Chance(2))
 			c.Stroke(poly)
 		case n >= 4:
-			if Chance(2) {
-				poly := RegularPolygon(center, r, ns, Chance(2))
+			if util.Chance(2) {
+				poly := RegularPolygon(center, r, ns, util.Chance(2))
 				c.Stroke(poly)
 			}
 			gem := Gemstone(center, r, r-(radius_step*2), ns)

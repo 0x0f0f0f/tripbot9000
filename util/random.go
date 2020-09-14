@@ -1,4 +1,4 @@
-package trip
+package util
 
 import (
 	"math/rand"
