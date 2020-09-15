@@ -11,6 +11,7 @@ import (
 
 	com "github.com/0x0f0f0f/tripbot9000/commands"
 	gen "github.com/0x0f0f0f/tripbot9000/generator"
+	gli "github.com/0x0f0f0f/tripbot9000/glitcher"
 	// "strings"
 )
 
@@ -20,6 +21,7 @@ func main() {
 		gen.NewGemstoneCommand(),
 		gen.NewMandelbrotCommand(),
 		gen.NewMandelgemCommand(),
+		gli.NewMatrixCommand(),
 	}
 
 	args := os.Args[1:]
@@ -28,16 +30,23 @@ func main() {
 		log.Fatal("You must pass a subcommand") //TODO print usage
 	}
 
-	subcmd := args[1]
+	subcmd := args[0]
 
 	for _, cmd := range cmds {
 		if cmd.Name() == subcmd {
-			cmd.Init(args[1:])
-			err := cmd.Run()
+			err := cmd.Init(args[1:])
 			if err != nil {
 				panic(err)
 			}
+			err = cmd.Run()
+			if err != nil {
+				panic(err)
+			}
+
+			return
 		}
 	}
 
+	// TODO print usage
+	log.Fatal("Subcommand not found")
 }
