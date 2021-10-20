@@ -1,7 +1,6 @@
 # TRIPBOT9000
 
 TRIPBBOT9000 generates abstract geometric art.
-[Get the merchandise](https://tripbot.shop)
 
 ## Installation
 ```
